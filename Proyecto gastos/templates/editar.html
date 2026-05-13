@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="card" style="max-width:550px; margin: 0 auto;">
+    <h2 style="margin-top: 0;">Editar Registro</h2>
+    <form action="/editar/{{ gasto.id }}" method="POST">
+        <label>Descripción</label>
+        <input type="text" name="descripcion" value="{{ gasto.descripcion }}" required>
+        <label>Monto</label>
+        <input type="number" name="monto" value="{{ gasto.monto }}" required>
+        <label>Fecha</label>
+        <input type="date" name="fecha" value="{{ gasto.fecha }}" required>
+        <label>Categoría</label>
+        <select name="categoria_id">
+            {% for c in categorias %}
+            <option value="{{ c.id }}" {{ 'selected' if gasto.categoria_id == c.id }}>{{ c.nombre }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <button type="submit" class="btn-primary" style="width:100%; padding: 1rem;">GUARDAR CAMBIOS</button>
+        <a href="/" style="display: block; text-align: center; margin-top: 1rem; color: var(--text-muted); text-decoration: none; font-size: 0.85rem;">Cancelar y volver</a>
+    </form>
+</div>
+{% endblock %}

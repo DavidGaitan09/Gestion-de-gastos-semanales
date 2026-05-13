@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="config-hero">
+    <h1>Presupuesto Semanal</h1>
+    <p>Define tu meta de ahorro. Te avisaremos si te pasas.</p>
+    <form action="/configuracion" method="POST">
+        <input type="number" name="presupuesto" value="{{ presupuesto }}" class="config-input">
+        <br>
+        <button type="submit" class="btn-primary" style="background:white; color:var(--primary); padding: 1rem 3rem;">ACTUALIZAR</button>
+    </form>
+</div>
+{% endblock %}

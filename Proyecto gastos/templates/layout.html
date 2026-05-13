@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>WalletFlow | FinTech Pro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">WALLETFLOW</a>
+            <div class="nav-links">
+                <a href="/" class="nav-item {{ 'active' if request.path == '/' }}">Dashboard</a>
+                <a href="/reportes" class="nav-item {{ 'active' if request.path == '/reportes' }}">Reportes</a>
+                <a href="/historial_mensual" class="nav-item {{ 'active' if request.path == '/historial_mensual' }}">Historial</a>
+                <a href="/categorias" class="nav-item {{ 'active' if request.path == '/categorias' }}">Categorías</a>
+                <a href="/configuracion" class="nav-item {{ 'active' if request.path == '/configuracion' }}">Presupuesto</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
