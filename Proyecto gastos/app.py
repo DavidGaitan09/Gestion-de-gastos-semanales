@@ -54,15 +54,66 @@ def index():
 
 @app.route('/registrar_gasto', methods=['POST'])
 def registrar_gasto():
-    # KAREN: Aquí debes capturar los datos del formulario (descripcion, monto, categoria_id, fecha)
-    # e insertar el nuevo registro en la tabla 'gastos'.
-    pass
+    descripcion = (request.form.get('descripcion') or '').strip()
+    monto_raw = (request.form.get('monto') or '').strip()
+    categoria_id_raw = (request.form.get('categoria_id') or '').strip()
+    fecha = (request.form.get('fecha') or '').strip()
+
+    if not descripcion or not monto_raw or not categoria_id_raw or not fecha:
+        flash("Por favor completa todos los campos del gasto.", "warning")
+        return redirect(url_for('index'))
+
+    try:
+        monto = float(monto_raw)
+        categoria_id = int(categoria_id_raw)
+    except ValueError:
+        flash("Monto o categoría inválidos.", "danger")
+        return redirect(url_for('index'))
+
+    if monto <= 0:
+        flash("El monto debe ser mayor a 0.", "warning")
+        return redirect(url_for('index'))
+
+    conn = get_db_connection()
+    try:
+        conn.execute(
+            "INSERT INTO gastos (descripcion, monto, categoria_id, fecha) VALUES (?, ?, ?, ?)",
+            (descripcion, monto, categoria_id, fecha),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    flash("Gasto registrado correctamente.", "success")
+    return redirect(url_for('index'))
 
 @app.route('/categorias', methods=['GET', 'POST'])
 def gestionar_categorias():
-    # KAREN: Aquí debes programar que si el método es POST, se guarde una nueva categoría.
-    # También debe retornar el render_template con la lista de categorías existentes.
-    pass
+    conn = get_db_connection()
+    try:
+        if request.method == 'POST':
+            nombre = (request.form.get('nombre') or '').strip()
+            if not nombre:
+                flash("El nombre de la categoría no puede estar vacío.", "warning")
+                return redirect(url_for('gestionar_categorias'))
+
+            existente = conn.execute(
+                "SELECT 1 FROM categorias WHERE LOWER(nombre) = LOWER(?) LIMIT 1",
+                (nombre,),
+            ).fetchone()
+            if existente:
+                flash("Esa categoría ya existe.", "warning")
+                return redirect(url_for('gestionar_categorias'))
+
+            conn.execute("INSERT INTO categorias (nombre) VALUES (?)", (nombre,))
+            conn.commit()
+            flash("Categoría creada correctamente.", "success")
+            return redirect(url_for('gestionar_categorias'))
+
+        categorias = conn.execute("SELECT * FROM categorias ORDER BY nombre ASC").fetchall()
+        return render_template('categorias.html', categorias=categorias)
+    finally:
+        conn.close()
 
 # ============================================================
 # SECCIÓN PARA JUAN: ELIMINACIÓN Y REPORTES
