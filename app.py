@@ -144,7 +144,7 @@ def reportes():
         cur.execute('SELECT * FROM gastos WHERE categoria = %s', (categoria_seleccionada,))
         gastos = cur.fetchall()
 
-    return render_template('reportes.html', total=total, categoria=categoria_seleccionada, gastos=gastos)
+    return render_template('reportes.html', total=total, categoria=categoria_elegida, gastos=gastos)
     pass
 
 # ============================================================
