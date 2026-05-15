@@ -126,8 +126,6 @@ def eliminar_gasto(id):
     mysql.connection.commit()
     flash('Registro eliminado', 'Warning')
     return redirect(url.for('index'))
-    # JUAN: Aquí debes programar el DELETE para borrar el registro por ID.
-    # No olvides usar el flash() para mostrar el aviso amarillo de "Registro eliminado".
     pass
 
 @app.route('/reportes')
@@ -147,8 +145,6 @@ def reportes():
         gastos = cur.fetchall()
 
     return render_template('reportes.html', total=total, categoria=categoria_seleccionada, gastos=gastos)
-    # JUAN: Aquí debes programar la lógica para filtrar gastos por categoría.
-    # Debe sumar el total de la categoría seleccionada y mostrarlo en 'reportes.html'.
     pass
 
 # ============================================================
